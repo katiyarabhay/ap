@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Timetable Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="landing-container">
+            <div class="landing-header">
+                <h1>Smart Timetable Generator</h1>
+                <p>Intelligent scheduling system for educational institutions</p>
+            </div>
+            <div class="role-selection">
+                <h2>Select Your Role</h2>
+                <div class="role-cards">
+                    <div class="role-card" data-role="admin">
+                        <div class="role-icon">👨‍💼</div>
+                        <h3>Admin</h3>
+                        <p>Manage timetables, users, and system settings</p>
+                        <button class="btn btn--primary">Login as Admin</button>
+                    </div>
+                    <div class="role-card" data-role="faculty">
+                        <div class="role-icon">👨‍🏫</div>
+                        <h3>Faculty</h3>
+                        <p>View schedules and manage teaching preferences</p>
+                        <button class="btn btn--primary">Login as Faculty</button>
+                    </div>
+                    <div class="role-card" data-role="student">
+                        <div class="role-icon">👨‍🎓</div>
+                        <h3>Student</h3>
+                        <p>Access timetables and course information</p>
+                        <button class="btn btn--primary">Login as Student</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="login-container">
+            <div class="login-card card">
+                <div class="card__body">
+                    <div class="login-header">
+                        <button class="back-btn btn btn--outline btn--sm">&larr; Back</button>
+                        <h2 id="loginTitle">Admin Login</h2>
+                        <div class="role-indicator">
+                            <span id="roleIcon">👨‍💼</span>
+                            <span id="roleName">Administrator</span>
+                        </div>
+                    </div>
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label class="form-label" for="username">Username</label>
+                            <input type="text" id="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="password">Password</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <div id="loginError" class="error-message hidden"></div>
+                        <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                    </form>
+                    <div class="demo-credentials">
+                        <h4>Demo Credentials:</h4>
+                        <p id="demoInfo">Username: admin, Password: admin123</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="page dashboard">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h2>Admin Dashboard</h2>
+            </div>
+            <div class="navbar-user">
+                <span id="adminUserName">Dr. Sarah Johnson</span>
+                <button id="adminLogout" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="dashboard-container">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-section="overview">📊 Overview</button>
+                    <button class="nav-item" data-section="student-management">👨‍🎓 Student Management</button>
+                    <button class="nav-item" data-section="faculty-management">👨‍🏫 Faculty Management</button>
+                    <button class="nav-item" data-section="timetable">📅 Timetable Management</button>
+                    <button class="nav-item" data-section="users">👥 User Management</button>
+                    <button class="nav-item" data-section="classrooms">🏫 Classrooms</button>
+                    <button class="nav-item" data-section="subjects">📚 Subjects</button>
+                    <button class="nav-item" data-section="analytics">📈 Analytics</button>
+                </nav>
+            </aside>
+
+            <main class="dashboard-content">
+                <!-- Overview Section -->
+                <section id="overview" class="content-section active">
+                    <h3>System Overview</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card card">
+                            <div class="card__body">
+                                <h4>Total Students</h4>
+                                <p class="stat-number" id="totalStudents">8</p>
+                            </div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="card__body">
+                                <h4>Faculty Members</h4>
+                                <p class="stat-number" id="totalFaculty">6</p>
+                            </div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="card__body">
+                                <h4>Departments</h4>
+                                <p class="stat-number" id="totalDepartments">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="card__body">
+                                <h4>Active Courses</h4>
+                                <p class="stat-number" id="totalSubjects">10</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-charts">
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Student Distribution by Course</h4>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="studentDistributionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Student Management Section -->
+                <section id="student-management" class="content-section">
+                    <div class="section-header">
+                        <h3>Student Management</h3>
+                        <div class="section-actions">
+                            <button class="btn btn--outline btn--sm" id="exportStudents">Export Data</button>
+                            <button class="btn btn--primary" id="addStudent">Add Student</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-section card">
+                        <div class="card__body">
+                            <div class="filters-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Search Students</label>
+                                    <input type="text" id="studentSearch" class="form-control" placeholder="Search by name, email, or roll number...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Filter by Course</label>
+                                    <select id="courseFilter" class="form-control">
+                                        <option value="">All Courses</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="MCA">MCA</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Filter by Semester</label>
+                                    <select id="semesterFilter" class="form-control">
+                                        <option value="">All Semesters</option>
+                                        <option value="1">Semester 1</option>
+                                        <option value="2">Semester 2</option>
+                                        <option value="3">Semester 3</option>
+                                        <option value="4">Semester 4</option>
+                                        <option value="5">Semester 5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort by</label>
+                                    <select id="studentSort" class="form-control">
+                                        <option value="name">Name</option>
+                                        <option value="rollNo">Roll Number</option>
+                                        <option value="gpa">GPA</option>
+                                        <option value="attendance">Attendance</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="students-table card">
+                        <div class="card__body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAllStudents"></th>
+                                            <th>Roll No</th>
+                                            <th>Name</th>
+                                            <th>Course</th>
+                                            <th>Semester</th>
+                                            <th>GPA</th>
+                                            <th>Attendance</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentsTableBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="table-pagination">
+                                <div class="pagination-info">
+                                    <span id="studentsPaginationInfo">Showing 1-8 of 8 students</span>
+                                </div>
+                                <div class="bulk-actions">
+                                    <button class="btn btn--outline btn--sm" id="bulkEmailStudents" disabled>Send Email</button>
+                                    <button class="btn btn--outline btn--sm" id="bulkUpdateStudents" disabled>Bulk Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Faculty Management Section -->
+                <section id="faculty-management" class="content-section">
+                    <div class="section-header">
+                        <h3>Faculty Management</h3>
+                        <div class="section-actions">
+                            <button class="btn btn--outline btn--sm" id="exportFaculty">Export Data</button>
+                            <button class="btn btn--primary" id="addFaculty">Add Faculty</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-section card">
+                        <div class="card__body">
+                            <div class="filters-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Search Faculty</label>
+                                    <input type="text" id="facultySearch" class="form-control" placeholder="Search by name, email, or department...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Filter by Department</label>
+                                    <select id="departmentFilter" class="form-control">
+                                        <option value="">All Departments</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="Physics">Physics</option>
+                                        <option value="English">English</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sort by</label>
+                                    <select id="facultySort" class="form-control">
+                                        <option value="name">Name</option>
+                                        <option value="experience">Experience</option>
+                                        <option value="feedback">Student Feedback</option>
+                                        <option value="workload">Current Workload</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faculty-table card">
+                        <div class="card__body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAllFaculty"></th>
+                                            <th>Name</th>
+                                            <th>Department</th>
+                                            <th>Designation</th>
+                                            <th>Experience</th>
+                                            <th>Current Hours</th>
+                                            <th>Student Feedback</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="facultyTableBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="table-pagination">
+                                <div class="pagination-info">
+                                    <span id="facultyPaginationInfo">Showing 1-6 of 6 faculty</span>
+                                </div>
+                                <div class="bulk-actions">
+                                    <button class="btn btn--outline btn--sm" id="bulkAssignFaculty" disabled>Bulk Assign</button>
+                                    <button class="btn btn--outline btn--sm" id="generateWorkloadReport" disabled>Workload Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Timetable Management Section -->
+                <section id="timetable" class="content-section">
+                    <div class="section-header">
+                        <h3>Timetable Management</h3>
+                        <button class="btn btn--primary" id="generateTimetable">Generate New Timetable</button>
+                    </div>
+                    <div class="timetable-controls">
+                        <div class="form-group">
+                            <label class="form-label">Select Batch</label>
+                            <select id="batchSelect" class="form-control">
+                                <option value="BCA-SEM3-A">BCA Semester 3 - Section A</option>
+                                <option value="BCA-SEM3-B">BCA Semester 3 - Section B</option>
+                                <option value="BCA-SEM5-A">BCA Semester 5 - Section A</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="timetable-grid">
+                        <div class="timetable-header">Weekly Timetable</div>
+                        <div id="adminTimetableGrid" class="grid-container"></div>
+                    </div>
+                </section>
+
+                <!-- User Management Section -->
+                <section id="users" class="content-section">
+                    <div class="section-header">
+                        <h3>User Management</h3>
+                        <button class="btn btn--primary" id="addUser">Add New User</button>
+                    </div>
+                    <div class="users-table">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Classrooms Section -->
+                <section id="classrooms" class="content-section">
+                    <div class="section-header">
+                        <h3>Classroom Management</h3>
+                        <button class="btn btn--primary" id="addClassroom">Add Classroom</button>
+                    </div>
+                    <div class="classrooms-grid">
+                        <div id="classroomsContainer"></div>
+                    </div>
+                </section>
+
+                <!-- Subjects Section -->
+                <section id="subjects" class="content-section">
+                    <div class="section-header">
+                        <h3>Subject Management</h3>
+                        <button class="btn btn--primary" id="addSubject">Add Subject</button>
+                    </div>
+                    <div class="subjects-grid">
+                        <div id="subjectsContainer"></div>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analytics" class="content-section">
+                    <h3>Analytics & Reports</h3>
+                    <div class="analytics-grid">
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Faculty Workload Distribution</h4>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="workloadChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Student Performance Overview</h4>
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="performanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-section">
+                        <h4>Generate Reports</h4>
+                        <div class="reports-grid">
+                            <button class="btn btn--outline report-btn" data-report="student-report">Student Performance Report</button>
+                            <button class="btn btn--outline report-btn" data-report="faculty-report">Faculty Workload Report</button>
+                            <button class="btn btn--outline report-btn" data-report="attendance-report">Attendance Summary</button>
+                            <button class="btn btn--outline report-btn" data-report="department-report">Department Analytics</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Faculty Dashboard -->
+    <div id="facultyDashboard" class="page dashboard">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h2>Faculty Dashboard</h2>
+            </div>
+            <div class="navbar-user">
+                <span id="facultyUserName">Prof. Michael Chen</span>
+                <button id="facultyLogout" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="dashboard-container">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-section="schedule">📅 My Schedule</button>
+                    <button class="nav-item" data-section="preferences">⚙️ Preferences</button>
+                    <button class="nav-item" data-section="requests">📝 Requests</button>
+                    <button class="nav-item" data-section="courses">📚 My Courses</button>
+                    <button class="nav-item" data-section="notifications">🔔 Notifications</button>
+                </nav>
+            </aside>
+
+            <main class="dashboard-content">
+                <section id="schedule" class="content-section active">
+                    <h3>My Teaching Schedule</h3>
+                    <div class="timetable-grid">
+                        <div id="facultyTimetableGrid" class="grid-container"></div>
+                    </div>
+                </section>
+
+                <section id="preferences" class="content-section">
+                    <h3>Teaching Preferences</h3>
+                    <div class="preferences-form">
+                        <div class="form-group">
+                            <label class="form-label">Preferred Time Slots</label>
+                            <div class="time-preferences">
+                                <label><input type="checkbox" checked> Morning (9AM - 12PM)</label>
+                                <label><input type="checkbox" checked> Afternoon (12PM - 3PM)</label>
+                                <label><input type="checkbox"> Evening (3PM - 6PM)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Maximum Hours per Week</label>
+                            <input type="number" class="form-control" value="20" min="10" max="30">
+                        </div>
+                        <button class="btn btn--primary">Save Preferences</button>
+                    </div>
+                </section>
+
+                <section id="requests" class="content-section">
+                    <h3>Schedule Change Requests</h3>
+                    <div class="request-form card">
+                        <div class="card__body">
+                            <h4>Submit New Request</h4>
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label">Request Type</label>
+                                    <select class="form-control">
+                                        <option>Schedule Change</option>
+                                        <option>Leave Request</option>
+                                        <option>Room Change</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reason</label>
+                                    <textarea class="form-control" rows="3" placeholder="Please provide details..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn--primary">Submit Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="courses" class="content-section">
+                    <h3>My Courses</h3>
+                    <div class="courses-list">
+                        <div class="course-card card">
+                            <div class="card__body">
+                                <h4>CS301 - Data Structures</h4>
+                                <p>Credits: 4 | Students: 45</p>
+                                <p>Batches: BCA-SEM3-A, BCA-SEM3-B</p>
+                                <div class="course-stats">
+                                    <span class="status status--success">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-card card">
+                            <div class="card__body">
+                                <h4>CS302 - Database Management</h4>
+                                <p>Credits: 4 | Students: 42</p>
+                                <p>Batches: BCA-SEM3-A</p>
+                                <div class="course-stats">
+                                    <span class="status status--success">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="notifications" class="content-section">
+                    <h3>Notifications</h3>
+                    <div class="notifications-list">
+                        <div class="notification-item card">
+                            <div class="card__body">
+                                <h4>Schedule Update</h4>
+                                <p>Your CS301 class has been moved to Room CR102 for tomorrow.</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item card">
+                            <div class="card__body">
+                                <h4>New Student Enrollment</h4>
+                                <p>5 new students have been enrolled in your Database Management course.</p>
+                                <small>1 day ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="page dashboard">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h2>Student Dashboard</h2>
+            </div>
+            <div class="navbar-user">
+                <span id="studentUserName">Anchal Kanaujia</span>
+                <button id="studentLogout" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="dashboard-container">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-section="timetable">📅 My Timetable</button>
+                    <button class="nav-item" data-section="courses">📚 My Courses</button>
+                    <button class="nav-item" data-section="registration">📝 Course Registration</button>
+                    <button class="nav-item" data-section="calendar">📆 Academic Calendar</button>
+                    <button class="nav-item" data-section="progress">📊 Academic Progress</button>
+                </nav>
+            </aside>
+
+            <main class="dashboard-content">
+                <section id="timetable" class="content-section active">
+                    <div class="section-header">
+                        <h3>My Timetable - BCA Semester 5</h3>
+                        <div class="timetable-actions">
+                            <button class="btn btn--outline btn--sm" id="downloadTimetable">Download PDF</button>
+                            <button class="btn btn--outline btn--sm" id="exportCSV">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="timetable-grid">
+                        <div id="studentTimetableGrid" class="grid-container"></div>
+                    </div>
+                </section>
+
+                <section id="courses" class="content-section">
+                    <h3>Enrolled Courses</h3>
+                    <div class="courses-grid">
+                        <div class="course-card card">
+                            <div class="card__body">
+                                <h4>CS401 - Software Engineering</h4>
+                                <p>Credits: 4 | Faculty: Dr. Ravi Patel</p>
+                                <p>Schedule: Mon, Wed, Fri - 10:00 AM</p>
+                                <div class="course-progress">
+                                    <span class="status status--success">Enrolled</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="registration" class="content-section">
+                    <h3>Course Registration</h3>
+                    <div class="registration-info card">
+                        <div class="card__body">
+                            <h4>Registration Period: Closed</h4>
+                            <p>Next registration opens: January 15, 2026</p>
+                            <div class="status status--warning">Registration Closed</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="calendar" class="content-section">
+                    <h3>Academic Calendar</h3>
+                    <div class="calendar-events">
+                        <div class="event-item card">
+                            <div class="card__body">
+                                <h4>Mid-Semester Exams</h4>
+                                <p>October 15-25, 2025</p>
+                                <span class="status status--warning">Upcoming</span>
+                            </div>
+                        </div>
+                        <div class="event-item card">
+                            <div class="card__body">
+                                <h4>Winter Break</h4>
+                                <p>December 20, 2025 - January 10, 2026</p>
+                                <span class="status status--info">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="progress" class="content-section">
+                    <h3>Academic Progress</h3>
+                    <div class="progress-cards">
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Current CGPA</h4>
+                                <p class="stat-number">8.5</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h4>Credits Completed</h4>
+                                <p class="stat-number">72/120</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="timetableModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate New Timetable</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="timetableGenerationForm">
+                    <div class="form-group">
+                        <label class="form-label">Select Batch</label>
+                        <select name="batch" class="form-control" required>
+                            <option value="BCA-SEM3-A">BCA Semester 3 - Section A</option>
+                            <option value="BCA-SEM3-B">BCA Semester 3 - Section B</option>
+                            <option value="BCA-SEM5-A">BCA Semester 5 - Section A</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Classes per Day</label>
+                        <input type="number" name="classesPerDay" class="form-control" value="6" min="4" max="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Working Days</label>
+                        <select name="workingDays" class="form-control" required>
+                            <option value="5">Monday to Friday</option>
+                            <option value="6">Monday to Saturday</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Generate Timetable</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="studentDetailModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="studentModalTitle">Student Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="studentModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculty Detail Modal -->
+    <div id="facultyDetailModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="facultyModalTitle">Faculty Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="facultyModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
